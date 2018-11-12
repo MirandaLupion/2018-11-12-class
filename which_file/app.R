@@ -7,10 +7,12 @@ build_file <- function(x){
   paste("../data/data/elections-poll-", tolower(q[1]), q[2], "-", q[3], ".csv", sep = "")
 }
 
-build_file_http <- function(x){
+build_file_http <- function(x, y){
   x <- str_trim(x)
-  q <- str_split(x, "-")[[1]]
-  paste("https://raw.githubusercontent.com/TheUpshot/2018-live-poll-results/master/data/elections-poll-", tolower(q[1]), q[2], "-", q[3], ".csv", sep = "")
+  y <- str_trim(y)
+  q1 <- str_split(x, "-")[[1]]
+  q2 <- str_split(y, "-")[[1]]
+  paste("https://raw.githubusercontent.com/TheUpshot/2018-live-poll-results/master/data/elections-poll-", tolower(q1[1]), q1[2], "-", q2[1], ".csv", sep = "")
 }
 
 # Define UI for data upload app ----
@@ -26,7 +28,8 @@ ui <- fluidPage(
     sidebarPanel(
       
       # Input: Select a file ----
-      textInput("file1", "Choose CSV File", "CA-49-1")
+      textInput("file1", "Location", "CA-49"),
+      textInput("file2", "District", "1")
     ),
     
     # Main panel for displaying outputs ----
@@ -50,7 +53,7 @@ server <- function(input, output) {
     
     req(input$file1)
     
-    df <- read.csv(build_file_http(input$file1))
+    df <- read.csv(build_file_http(input$file1, input$file2))
     
     return(df)
   })
